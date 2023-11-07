@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="w-full fixed h-[56px] z-10 border-b-gray-500 border-2 top-0 left-0  ">
+      <div className="w-full fixed h-[56px] z-10 border-b-gray-500 border-2 backdrop-blur-md top-0 left-0  ">
         <div className="flex px-4 justify-between items-center my-2">
           {/* <Image src="/CarLogo.png" width={100} height={20} alt='Logo' style={{width:100, height:20}}/> */}
           <div className="font-mono text-lg">FixMyMoty</div>
