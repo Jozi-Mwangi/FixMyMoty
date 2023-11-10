@@ -1,19 +1,22 @@
 "use client"
 
 import React from "react";
-import { HelpSupportComp, CompanyFooter , JobsFooter} from ".";
+import { HelpSupportComp, CompanyFooter , JobsFooter, UsefulLinksFooter} from ".";
 
 const Footer = () => {
   return (
-    <div className="bg-[#202225] text-white w-full">
-      <div className="flex flex-col mx-auto py-3 px-5 space-y-4">
-        {/* <div>Help & Support</div> */}
-        <HelpSupportComp/>
-        {/* <div>Company</div> */}
-        <CompanyFooter/>
-        {/* <div>Popular Jobs</div> */}
+    <div className="bg-[#202225] text-white  max-w-full ">
+      <div className=" mx-auto py-3 px-5  flex-col  items-center">
+        <div className=" w-full space-y-4 flex flex-col md:mx-12 md:w-3/4 md:flex-row md:jsutify-center my-9" >
         <JobsFooter/>
-        <div>Useful Links</div>
+        <HelpSupportComp/>
+        <CompanyFooter/>
+        <UsefulLinksFooter/>
+        </div>
+        <div className=" px-2 py-3 text-center">
+          Copyright &copy; {new Date().getFullYear()}
+          {" Mwangi Joseph"}
+        </div>
       </div>
     </div>
   );
