@@ -6,8 +6,8 @@ import { HelpSupportComp, CompanyFooter , JobsFooter, UsefulLinksFooter} from ".
 const Footer = () => {
   return (
     <div className="bg-[#202225] text-white  max-w-full ">
-      <div className=" mx-auto py-3 px-5  flex-col  items-center">
-        <div className=" w-full space-y-4 flex flex-col md:mx-12 md:w-3/4 md:flex-row md:jsutify-center my-9" >
+      <div className=" mx-auto py-3 px-5 flex flex-col justify-center items-center">
+        <div className=" w-full space-y-4 flex flex-col md:mx-12 md:w-3/4 md:flex-row my-9 h-full" >
         <JobsFooter/>
         <HelpSupportComp/>
         <CompanyFooter/>

@@ -1,16 +1,14 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { AiOutlineCaretDown } from "react-icons/ai";
+import { useFooterContext } from "./context-provider";
+import { FooterContextProps } from "@/types/globalTypes";
 
 const CompanyFooterComp = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const context = useFooterContext() as FooterContextProps;
+  const { isOpen, toggleMenu } = context;
 
   return (
-    <div id="compant footer" className="w-full md:mx-4 md:px-3" onClick={toggleMenu}>
+    <div id="company-footer" className="md:mt-0 w-full md:mx-4 md:px-3" onClick={toggleMenu}>
       <button className="text-gray-400 flex items-center gap-3">
         Company{" "}
         <span className="md:hidden" >
