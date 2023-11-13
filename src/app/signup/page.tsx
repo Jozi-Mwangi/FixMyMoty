@@ -1,34 +1,92 @@
 "use client";
+import { FormDataProps } from "@/types/globalTypes";
+import { Database } from "@/types/supabaseTypes";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const SignUp = () => {
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("")
-  const [userType, setUserType] = useState("")
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("");
+  const [selectedGender, setSelectedGender] = useState<string[]>([]);
 
-  const handleMechanicProfile =()=>{
-    setUserType("mechanic")
-  }
+  const router = useRouter();
+  const supabase = createClientComponentClient<Database>();
 
-  const handleCustomerProfile =()=>{
-    setUserType("customer")
-  }
-  
+  const userName = `${firstName} ${lastName}`;
+
+  const handleSignUp = async () => {
+    await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+
+    const formData: FormDataProps | null = {
+      email,
+      phoneNumber,
+      userName,
+      password,
+      userType,
+      selectedGender,
+    };
+
+    const { error } = await supabase.from("profiles").insert({
+      email:formData.email,
+      full_name: formData.userName,
+      gender: formData.selectedGender,
+      phone_number: formData.phoneNumber,
+      user_type: formData.userType,
+      updated_at:(Date.now())
+    });
+  };
+
+  const handleMechanicProfile = () => {
+    setUserType("mechanic");
+  };
+
+  const handleCustomerProfile = () => {
+    setUserType("customer");
+  };
+
+  const handleGenderChange = (gender: string) => {
+    // if(gender && selectedGender.includes(gender)){
+    //   setSelectedGender(selectedGender.filter(g=>g !== gender))
+    // } else {
+    //   setSelectedGender([...selectedGender, gender!])
+    // }
+    setSelectedGender((prevGender) => {
+      if (prevGender.includes(gender)) {
+        return prevGender.filter((g) => g !== gender);
+      } else {
+        return [...prevGender, gender];
+      }
+    });
+  };
 
   return (
     <div className="w-full h-full">
       <div className="py-6 text-center">
         <h1 className="py-2 text-2xl font-bold container">Sign Up</h1>
         <form className="flex flex-col my-4 container md:w-[800px] space-y-5">
-          <div className="flex justify-center my-4 gap-4">
-            <button className="py-4 w-[250px]  rounded-xl border-solid border-2 border-orange-400" onClick={handleCustomerProfile} >
-              Im a driver
+          <div className="flex  my-4 justify-between">
+            <button
+              className="py-4 w-[250px]  rounded-xl border-solid border-4 border-orange-400 text-bold"
+              onClick={handleCustomerProfile}
+            >
+              I'm a Driver
             </button>
-            <button className="py-4 w-[250px] rounded-xl border-solid border-2 border-orange-400 " onClick={handleMechanicProfile} >
-              im a mechanic
+            <button
+              className="py-4 w-[250px] rounded-xl border-solid border-4 border-orange-400 text-bold"
+              onClick={handleMechanicProfile}
+            >
+              I'm a Mechanic
             </button>
           </div>
           <h4 className="">
@@ -42,14 +100,14 @@ const SignUp = () => {
             <div className="flex justify-evenly py-2">
               <input
                 type="text"
-                onChange={(e)=>setFirstName(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value)}
                 value={firstName}
                 placeholder="First Name"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
               />
               <input
                 type="text"
-                onChange={(e)=>setLastName(e.target.value)}
+                onChange={(e) => setLastName(e.target.value)}
                 value={lastName}
                 placeholder="Last Name"
                 className="py-4  border-2 border-orange-400 text-center rounded-xl"
@@ -64,7 +122,7 @@ const SignUp = () => {
               </h3>
               <input
                 type="email"
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 placeholder="Email Address"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
@@ -81,30 +139,43 @@ const SignUp = () => {
                 <input
                   type="number"
                   placeholder="Phone Number"
-                  onChange={(e)=>setPhoneNumber(e.target.value)}
-                value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  value={phoneNumber}
                   className="py-4 text-center rounded-xl border-2 border-orange-400"
                 />
               </div>
               <div>
                 <h3 className="text-bold w-fit my-2">What is your gender?</h3>
-                <div className="flex justify-between py-2">
-                  <div className="flex gap-2">
-                    <input type="checkbox" />
+                {/* <div className="flex  py-2"> */}
+                <div className=" flex gap-2 justify-between w-full">
+                  <label className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedGender.includes("male")}
+                      onChange={() => handleGenderChange("male")}
+                    />
                     <span>Male</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <input type="checkbox" />
+                  </label>
+                  {/* <div className=" space-x-2"> */}
+                  <label className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedGender.includes("female")}
+                      onChange={() => handleGenderChange("female")}
+                    />
                     <span>Female</span>
-                  </div>
+                  </label>
+                  {/* <span>Female</span> */}
+                  {/* </div> */}
                 </div>
+                {/* </div> */}
               </div>
             </div>
             <div className="my-4 flex flex-col space-y-2">
               <h3 className="text-bold w-fit my-2">Create a Password</h3>
               <input
                 type="password"
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 placeholder="Password"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
