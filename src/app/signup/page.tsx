@@ -7,7 +7,15 @@ const SignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("")
+  const [userType, setUserType] = useState("")
 
+  const handleMechanicProfile =()=>{
+    setUserType("mechanic")
+  }
+
+  const handleCustomerProfile =()=>{
+    setUserType("customer")
+  }
   
 
   return (
@@ -16,10 +24,10 @@ const SignUp = () => {
         <h1 className="py-2 text-2xl font-bold container">Sign Up</h1>
         <form className="flex flex-col my-4 container md:w-[800px] space-y-5">
           <div className="flex justify-center my-4 gap-4">
-            <button className="py-4 w-[250px]  rounded-xl border-solid border-2 border-orange-400">
+            <button className="py-4 w-[250px]  rounded-xl border-solid border-2 border-orange-400" onClick={handleCustomerProfile} >
               Im a driver
             </button>
-            <button className="py-4 w-[250px] rounded-xl border-solid border-2 border-orange-400 ">
+            <button className="py-4 w-[250px] rounded-xl border-solid border-2 border-orange-400 " onClick={handleMechanicProfile} >
               im a mechanic
             </button>
           </div>
