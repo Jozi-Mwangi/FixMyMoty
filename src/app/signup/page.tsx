@@ -19,33 +19,6 @@ const SignUp = () => {
 
   const userName = `${firstName} ${lastName}`;
 
-  const handleSignUp = async () => {
-    await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-
-    const formData: FormDataProps | null = {
-      email,
-      phoneNumber,
-      userName,
-      password,
-      userType,
-      selectedGender,
-    };
-
-    const { error } = await supabase.from("profiles").insert({
-      email:formData.email,
-      full_name: formData.userName,
-      gender: formData.selectedGender,
-      phone_number: formData.phoneNumber,
-      user_type: formData.userType,
-      updated_at:(Date.now())
-    });
-  };
 
   const handleMechanicProfile = () => {
     setUserType("mechanic");
@@ -56,11 +29,6 @@ const SignUp = () => {
   };
 
   const handleGenderChange = (gender: string) => {
-    // if(gender && selectedGender.includes(gender)){
-    //   setSelectedGender(selectedGender.filter(g=>g !== gender))
-    // } else {
-    //   setSelectedGender([...selectedGender, gender!])
-    // }
     setSelectedGender((prevGender) => {
       if (prevGender.includes(gender)) {
         return prevGender.filter((g) => g !== gender);
@@ -68,6 +36,42 @@ const SignUp = () => {
         return [...prevGender, gender];
       }
     });
+  };
+
+  const handleSignUp = async (event: React.FormEvent) => {
+    event.preventDefault()
+    await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+    router.refresh()
+
+    let formData: FormDataProps = {
+      email,
+      phoneNumber,
+      userName,
+      password,
+      userType,
+      selectedGender,
+    };
+
+    const { error } = await supabase.from("profiles").insert({
+      updated_at: Date.now(),
+      gender: formData?.selectedGender,
+      phone_number: formData?.phoneNumber,
+      email: formData?.email,
+      user_type: formData?.userType,
+      full_name: formData?.userName,
+      password: formData?.password,
+    });
+
+    if (error) {
+      console.error("Unable to register the user: ", error.message);
+      return <div>Error Registering the User</div>;
+    }
   };
 
   return (
@@ -200,7 +204,11 @@ const SignUp = () => {
                 .
               </span>
             </div>
-            <button className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3">
+            <button
+              className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
+              onClick={() => handleSignUp}
+              type="submit"
+            >
               Sign Up
             </button>
           </div>
