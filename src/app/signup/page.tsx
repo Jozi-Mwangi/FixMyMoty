@@ -18,7 +18,6 @@ const SignUp = () => {
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
 
   const router = useRouter();
-  const {res:supabase} = middleware
   const userName = `${firstName} ${lastName}`;
 
   const handleMechanicProfile = () => {
@@ -41,14 +40,6 @@ const SignUp = () => {
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
-    await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-    router.refresh();
 
     let formData: FormDataProps = {
       email,
@@ -59,28 +50,25 @@ const SignUp = () => {
       selectedGender,
     };
 
-    
-    if (error) {
-      console.error("Unable to register the user: ", error.message);
-      return <div>Error Registering the User</div>;
+    try {
+      const response = await fetch("/route.ts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formData,
+        }),
+      });
+      if (response.ok) {
+        console.log("Success in Sign Up");
+        router.push("/driver/[profileId]");
+      } else {
+        console.log("Error is Signing up");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
     }
-
-    const { data, error:insertError } = await supabase.from("profiles").insert({
-      updated_at: Date.now(),
-      gender: formData?.selectedGender,
-      phone_number: formData?.phoneNumber,
-      email: formData?.email,
-      user_type: formData?.userType,
-      full_name: formData?.userName,
-      password: formData?.password,
-    });
-
-    if (insertError) {
-      console.error("Error inserting user profile:", insertError.message);
-      return;
-    }
-
-    router.push("/driver/[profileId]")
   };
 
   return (
