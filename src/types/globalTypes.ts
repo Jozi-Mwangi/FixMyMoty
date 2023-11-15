@@ -15,3 +15,7 @@ export interface FormDataProps {
     userType : string,
     selectedGender: string[]
 }
+
+export type ProfileIDParams = {
+    profile_id: string;
+}

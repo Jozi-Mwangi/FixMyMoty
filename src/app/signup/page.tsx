@@ -2,8 +2,11 @@
 import { FormDataProps } from "@/types/globalTypes";
 import { Database } from "@/types/supabaseTypes";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+
+import { middleware } from "../../../middleware";
 
 const SignUp = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -15,10 +18,8 @@ const SignUp = () => {
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
 
   const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
-
+  const {res:supabase} = middleware
   const userName = `${firstName} ${lastName}`;
-
 
   const handleMechanicProfile = () => {
     setUserType("mechanic");
@@ -39,7 +40,7 @@ const SignUp = () => {
   };
 
   const handleSignUp = async (event: React.FormEvent) => {
-    event.preventDefault()
+    event.preventDefault();
     await supabase.auth.signUp({
       email,
       password,
@@ -47,7 +48,7 @@ const SignUp = () => {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
-    router.refresh()
+    router.refresh();
 
     let formData: FormDataProps = {
       email,
@@ -58,7 +59,13 @@ const SignUp = () => {
       selectedGender,
     };
 
-    const { error } = await supabase.from("profiles").insert({
+    
+    if (error) {
+      console.error("Unable to register the user: ", error.message);
+      return <div>Error Registering the User</div>;
+    }
+
+    const { data, error:insertError } = await supabase.from("profiles").insert({
       updated_at: Date.now(),
       gender: formData?.selectedGender,
       phone_number: formData?.phoneNumber,
@@ -68,10 +75,12 @@ const SignUp = () => {
       password: formData?.password,
     });
 
-    if (error) {
-      console.error("Unable to register the user: ", error.message);
-      return <div>Error Registering the User</div>;
+    if (insertError) {
+      console.error("Error inserting user profile:", insertError.message);
+      return;
     }
+
+    router.push("/driver/[profileId]")
   };
 
   return (
