@@ -1,12 +1,8 @@
 "use client";
 import { FormDataProps } from "@/types/globalTypes";
-import { Database } from "@/types/supabaseTypes";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { createClient } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
-import { middleware } from "../../../middleware";
+import { signUpAction } from "./actions";
+import { Router } from "next/router";
 
 const SignUp = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -16,8 +12,6 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
-
-  const router = useRouter();
   const userName = `${firstName} ${lastName}`;
 
   const handleMechanicProfile = () => {
@@ -40,6 +34,7 @@ const SignUp = () => {
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
+    // const router = useRouter();
 
     let formData: FormDataProps = {
       email,
@@ -49,26 +44,28 @@ const SignUp = () => {
       userType,
       selectedGender,
     };
+    
+   await signUpAction(formData)
 
-    try {
-      const response = await fetch("/route.ts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData,
-        }),
-      });
-      if (response.ok) {
-        console.log("Success in Sign Up");
-        router.push("/driver/[profileId]");
-      } else {
-        console.log("Error is Signing up");
-      }
-    } catch (error) {
-      console.error("Error: ", error);
-    }
+  //   try {
+  //     const response = await fetch("/route.ts", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         formData,
+  //       }),
+  //     });
+  //     if (response.ok) {
+  //       console.log("Success in Sign Up");
+  //       router.push("/driver/[profileId]");
+  //     } else {
+  //       console.log("Error is Signing up");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error: ", error);
+  //   }
   };
 
   return (
