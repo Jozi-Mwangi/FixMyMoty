@@ -1,14 +1,14 @@
 "use server"
-import { FormDataProps } from "@/types/globalTypes";
-import { useRouter } from "next/navigation"
+import { FormDataProps, SignUpResponse } from "@/types/globalTypes";
+// import { useRouter } from "next/"
 import { supabase } from "@/lib/supabase";
 
-export async function signUpAction(formData:FormDataProps) {
+export async function signUpAction(formData:FormDataProps): Promise<SignUpResponse> {
 
-    const router = useRouter();
+    // const router = useRouter();
 
-    
-    await supabase.auth.signUp({
+  try {
+    const {data, error} = await supabase.auth.signUp({
     email: formData.email,
       password: formData.password,
       options: {
@@ -21,5 +21,13 @@ export async function signUpAction(formData:FormDataProps) {
         },
       },
     });
-    router.push("/driver");
+    if(error){
+      console.error("Error signing up the user", error.message)  
+    }
+
+    return {profileId: data?.user?.id}
+  } catch (error) {
+    console.error("Error Processing signup form", error)    
+    return {error: new Error("Error Processing signup form")}
+  }   
 }

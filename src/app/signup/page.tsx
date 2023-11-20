@@ -2,9 +2,11 @@
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
 import { signUpAction } from "./actions";
-import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -34,7 +36,6 @@ const SignUp = () => {
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
-    // const router = useRouter();
 
     let formData: FormDataProps = {
       email,
@@ -45,29 +46,19 @@ const SignUp = () => {
       selectedGender,
     };
     
-   await signUpAction(formData)
+    console.log(formData);
+    const {profileId, error} =  await signUpAction(formData)
+    console.log(profileId);
+    
 
-  //   try {
-  //     const response = await fetch("/route.ts", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         formData,
-  //       }),
-  //     });
-  //     if (response.ok) {
-  //       console.log("Success in Sign Up");
-  //       router.push("/driver/[profileId]");
-  //     } else {
-  //       console.log("Error is Signing up");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error: ", error);
-  //   }
+    if(error){
+      // Handle the Error Gracefully.
+      console.error(error.message)
+    }
+    router.push(`/driver/${profileId}`)
   };
 
+  
   return (
     <div className="w-full h-full">
       <div className="py-6 text-center">
@@ -200,7 +191,7 @@ const SignUp = () => {
             </div>
             <button
               className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
-              onClick={() => handleSignUp}
+              onClick={handleSignUp}
               type="submit"
             >
               Sign Up

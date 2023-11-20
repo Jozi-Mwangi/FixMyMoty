@@ -19,3 +19,8 @@ export interface FormDataProps {
 export type ProfileIDParams = {
     profile_id: string;
 }
+
+export interface SignUpResponse {
+    profileId?: string ,
+    error?: Error
+}
