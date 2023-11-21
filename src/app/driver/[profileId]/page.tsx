@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabase";
 // const supabase = createClientComponentClient<Database>();
 
 export async function generateStaticParams() {
-
   const { data, error } = await supabase.from("profiles").select("profile_id");
   if (error) {
     console.error(error);
