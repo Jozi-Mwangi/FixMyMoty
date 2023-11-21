@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { CookieOptions } from "@supabase/ssr";
 import { Database } from "@/types/supabaseTypes";
@@ -15,7 +16,7 @@ let supabase : ReturnType<typeof createServerClient>
 if(typeof window === "undefined"){
   // Running on the server
   // const cookieStore = cookies();
-     supabase = createServerClient(
+     supabase = createClient(
       supabaseUrl!,
       supabaseAnonKey!,
       // {
@@ -25,13 +26,6 @@ if(typeof window === "undefined"){
       //     },
       //   },
       // }
-      {
-        cookieOptions: {
-          expires: 365,
-          secure: false,
-          sameSite
-        }
-      }
       )  
   } else {
     // Running on the client, cookies are available

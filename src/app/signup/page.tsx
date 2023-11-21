@@ -54,8 +54,10 @@ const SignUp = () => {
     if(error){
       // Handle the Error Gracefully.
       console.error(error.message)
+    } else {
+      // Only push to the route if there is no error. 
+      router.push(`/driver/${profileId}`)
     }
-    router.push(`/driver/${profileId}`)
   };
 
   
