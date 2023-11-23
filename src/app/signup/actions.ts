@@ -1,25 +1,26 @@
 "use server";
-import { FormDataProps, SignUpResponse } from "@/types/globalTypes";
+import { FormDataProps, ProfileIDParams, SignUpResponse, UserIDParams } from "@/types/globalTypes";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export async function signUpAction(
   formData: FormDataProps
 ): Promise<SignUpResponse> {
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleAuthChange = async (event: any, session: any) => {
     // Listen for changes in the authentication state of the user
     if (event === "SIGNED_IN" && session?.user?.email_confirmed_at) {
-      const userId = session.user.id;
+      const userID = session.user.id;
 
-      const { error } = await supabase.from("profiles").insert({
+      const { data, error } = await supabase.from("profiles").insert({
         updated_at: Date.now(),
         phone_number: formData.phoneNumber,
         gender: formData.selectedGender,
         user_type: formData.userType,
         full_name: formData.userName,
       });
+
       if (error) {
         console.error(
           "Error adding user data to the database: ",
@@ -28,8 +29,12 @@ export async function signUpAction(
 
         return;
       }
+      console.log("Profile successfully created. ", data);
+      
+      // const profileId = data?.user?.id
       // Redirect the user to their profile page
-      router.push(`/driver/${userId}`);
+      // router.push(`/driver/${userId}`);
+      // return {userID}
     }
   };
 

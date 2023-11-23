@@ -14,6 +14,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  const [signingUp, setSigningUp] = useState(false);
+
   const userName = `${firstName} ${lastName}`;
 
   const handleMechanicProfile = () => {
@@ -45,36 +47,43 @@ const SignUp = () => {
       userType,
       selectedGender,
     };
-    
-    console.log(formData);
-    const {profileId, error} =  await signUpAction(formData)
-    console.log(profileId);
-    
 
-    if(error){
+    setSigningUp(true);
+    console.log(formData);
+    const { profileId, error } = await signUpAction(formData);
+    console.log(profileId);
+    setSigningUp(false);
+
+    if (error) {
       // Handle the Error Gracefully.
-      console.error(error.message)
+      console.error(error.message);
     } else {
-      // Only push to the route if there is no error. 
-      router.push(`/driver/${profileId}`)
+      console.log(formData);
+
+      // Only push to the route if there is no error.
+      router.push(`/driver/${profileId}`);
     }
   };
 
-  
   return (
     <div className="w-full h-full">
       <div className="py-6 text-center">
         <h1 className="py-2 text-2xl font-bold container">Sign Up</h1>
-        <form className="flex flex-col my-4 container md:w-[800px] space-y-5">
+        <form
+          className="flex flex-col my-4 container md:w-[800px] space-y-5"
+          onSubmit={handleSignUp}
+        >
           <div className="flex  my-4 justify-between">
             <button
               className="py-4 w-[250px]  rounded-xl border-solid border-4 border-orange-400 text-bold"
               onClick={handleCustomerProfile}
+              type="button"
             >
               I'm a Driver
             </button>
             <button
               className="py-4 w-[250px] rounded-xl border-solid border-4 border-orange-400 text-bold"
+              type="button"
               onClick={handleMechanicProfile}
             >
               I'm a Mechanic
@@ -191,13 +200,22 @@ const SignUp = () => {
                 .
               </span>
             </div>
-            <button
-              className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
-              onClick={handleSignUp}
-              type="submit"
-            >
-              Sign Up
-            </button>
+            {!signingUp && (
+              <button
+                className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
+                type="submit"
+              >
+                Sign Up
+              </button>
+            )}
+            {signingUp && (
+              <button
+                className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
+                disabled
+              >
+                Signing Up ...
+              </button>
+            )}
           </div>
         </form>
       </div>

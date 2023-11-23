@@ -17,7 +17,11 @@ export interface FormDataProps {
 }
 
 export type ProfileIDParams = {
-    profile_id: string;
+    profile_id: string | null;
+}
+
+export type UserIDParams = {
+    userID: string | null;
 }
 
 export interface SignUpResponse {
