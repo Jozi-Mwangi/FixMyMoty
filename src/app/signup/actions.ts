@@ -11,7 +11,7 @@ export async function signUpAction(
   const handleAuthChange = async (event: any, session: any) => {
     // Listen for changes in the authentication state of the user
     if (event === "SIGNED_IN" && session?.user?.email_confirmed_at) {
-      const userID = session.user.id;
+      // const userID = session.user.id;
 
       const { data, error } = await supabase.from("profiles").insert({
         updated_at: Date.now(),
@@ -24,7 +24,7 @@ export async function signUpAction(
       if (error) {
         console.error(
           "Error adding user data to the database: ",
-          error.message
+          error
         );
 
         return;
