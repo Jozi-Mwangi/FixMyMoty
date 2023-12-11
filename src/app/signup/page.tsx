@@ -1,11 +1,16 @@
 "use client";
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
-import { signUpAction } from "./actions";
+// import { signUpAction } from "./actions";
 import { useRouter } from "next/navigation";
+import { useSupabase } from "../supabase-provider";
+// import { supabase } from "@supabase/auth-ui-shared";
+// import { supabase } from "@/lib/supabase";
 
 const SignUp = () => {
   const router = useRouter();
+
+  const supabase = useSupabase();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
@@ -50,8 +55,15 @@ const SignUp = () => {
 
     setSigningUp(true);
     console.log(formData);
-    const { profileId, error } = await signUpAction(formData);
-    console.log(profileId);
+
+    const {data , error} = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password
+    })
+
+    const profileId = data?.user?.id;
+    // const { profileId, error } = await signUpAction(formData);
+    // console.log(profileId);
     setSigningUp(false);
 
     if (error) {

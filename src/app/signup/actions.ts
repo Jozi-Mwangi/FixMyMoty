@@ -1,6 +1,6 @@
 "use server";
 import { FormDataProps, ProfileIDParams, SignUpResponse, UserIDParams } from "@/types/globalTypes";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 
 export async function signUpAction(
@@ -45,8 +45,10 @@ export async function signUpAction(
     });
     if (error) {
       console.error("Error signing up the user: ", error.message);
+      console.error("Full error object: ", error)
     } else {
-      supabase.auth.onAuthStateChange(handleAuthChange)
+      // router.push(`/`);
+      // supabase.auth.onAuthStateChange(handleAuthChange)
     }
 
     return { profileId: data?.user?.id };
