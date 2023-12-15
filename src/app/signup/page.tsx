@@ -4,77 +4,84 @@ import React, { useState } from "react";
 // import { signUpAction } from "./actions";
 import { useRouter } from "next/navigation";
 import { useSupabase } from "../supabase-provider";
-// import { supabase } from "@supabase/auth-ui-shared";
-// import { supabase } from "@/lib/supabase";
+// import { createServerSupabaseClient } from "../supabase-server";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 
 const SignUp = () => {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const supabase = useSupabase();
+  // const supabase = createClientComponentClient();
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("");
-  const [selectedGender, setSelectedGender] = useState<string[]>([]);
-  const [signingUp, setSigningUp] = useState(false);
+  // const [phoneNumber, setPhoneNumber] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [userType, setUserType] = useState("");
+  // const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  // const [signingUp, setSigningUp] = useState(false);
 
-  const userName = `${firstName} ${lastName}`;
+  // const userName = `${firstName} ${lastName}`;
 
-  const handleMechanicProfile = () => {
-    setUserType("mechanic");
-  };
+  // const handleMechanicProfile = () => {
+  //   setUserType("mechanic");
+  // };
 
-  const handleCustomerProfile = () => {
-    setUserType("customer");
-  };
+  // const handleCustomerProfile = () => {
+  //   setUserType("customer");
+  // };
 
-  const handleGenderChange = (gender: string) => {
-    setSelectedGender((prevGender) => {
-      if (prevGender.includes(gender)) {
-        return prevGender.filter((g) => g !== gender);
-      } else {
-        return [...prevGender, gender];
-      }
-    });
-  };
+  // const handleGenderChange = (gender: string) => {
+  //   setSelectedGender((prevGender) => {
+  //     if (prevGender.includes(gender)) {
+  //       return prevGender.filter((g) => g !== gender);
+  //     } else {
+  //       return [...prevGender, gender];
+  //     }
+  //   });
+  // };
 
-  const handleSignUp = async (event: React.FormEvent) => {
-    event.preventDefault();
+  // const handleSignUp = async (event: React.FormEvent) => {
+  //   event.preventDefault();
 
-    let formData: FormDataProps = {
-      email,
-      phoneNumber,
-      userName,
-      password,
-      userType,
-      selectedGender,
-    };
+  //   let formData: FormDataProps = {
+  //     email,
+  //     phoneNumber,
+  //     userName,
+  //     password,
+  //     userType,
+  //     selectedGender,
+  //   };
 
-    setSigningUp(true);
-    console.log(formData);
+  //   setSigningUp(true);
+  //   console.log(formData);
 
-    const {data , error} = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password
-    })
+  //   const {data , error} = await supabase.auth.signUp({
+  //     email: formData.email,
+  //     password: formData.password
+  //   })
 
-    const profileId = data?.user?.id;
-    // const { profileId, error } = await signUpAction(formData);
-    // console.log(profileId);
-    setSigningUp(false);
+  //   const profileId = data?.user?.id;
+  //   // const { profileId, error } = await signUpAction(formData);
+  //   // console.log(profileId);
+  //   setSigningUp(false);
 
-    if (error) {
-      // Handle the Error Gracefully.
-      console.error(error.message);
-    } else {
-      console.log(formData);
+  //   if (error) {
+  //     // Handle the Error Gracefully.
+  //     console.error(error.message);
+  //   } else {
+  //     console.log(formData);
 
-      // Only push to the route if there is no error.
-      router.push(`/driver/${profileId}`);
-    }
+  //     // Only push to the route if there is no error.
+  //     router.push(`/driver/${profileId}`);
+  //   }
+
+  const formData = new FormData()
+  async function createUser(formData:FormDataProps) {
+    
+  }
+
   };
 
   return (
