@@ -1,6 +1,7 @@
 "use client";
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
+import { signUpUser } from "./actions";
 
 const SignUp = () => {
   
@@ -14,6 +15,7 @@ const SignUp = () => {
   const handleMaleClick = () => setGender("male");
   const handleFemaleClick = () => setGender("female");
   
+
   async function createUser() {
     const firstName = formData.get("first-name");
     const lastName = formData.get("last-name");
@@ -21,9 +23,7 @@ const SignUp = () => {
     const email = formData.get("email") as string ?? "";
     const phoneNumber = formData.get("phone-number") as string ?? "";
     const password = formData.get("password") as string;
-
-    
-
+  
     const userForm: FormDataProps = {
       userType: userType,
       userName: fullName,
@@ -32,6 +32,8 @@ const SignUp = () => {
       selectedGender: gender,
       password: password
     }
+
+    await signUpUser(userForm)
   }
 
   return (
@@ -41,6 +43,7 @@ const SignUp = () => {
         <form
           className="flex flex-col my-4 container md:w-[800px] space-y-5"
           // onSubmit={handleSignUp}
+          action={createUser}
         >
           <div className="flex  my-4 justify-between">
             <button

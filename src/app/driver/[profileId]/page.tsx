@@ -1,10 +1,12 @@
+import { createServerSupabaseClient } from "@/app/supabase-server";
 import { ProfileIDParams } from "@/types/globalTypes";
 import { Database } from "@/types/supabaseTypes";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React from "react";
-import { supabase } from "@/lib/supabase";
+
 
 // const supabase = createClientComponentClient<Database>();
+const supabase = createServerSupabaseClient();
 
 export async function generateStaticParams() {
   const { data, error } = await supabase.from("profiles").select("profile_id");
