@@ -13,7 +13,7 @@ export interface FormDataProps {
     userName : string,
     password : string,
     userType : string,
-    selectedGender: string[]
+    selectedGender: string,
 }
 
 export type ProfileIDParams = {

@@ -1,88 +1,38 @@
 "use client";
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
-// import { signUpAction } from "./actions";
-import { useRouter } from "next/navigation";
-import { useSupabase } from "../supabase-provider";
-// import { createServerSupabaseClient } from "../supabase-server";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
 
 const SignUp = () => {
-  // const router = useRouter();
-
-  // const supabase = createClientComponentClient();
-
-  // const [phoneNumber, setPhoneNumber] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [userType, setUserType] = useState("");
-  // const [selectedGender, setSelectedGender] = useState<string[]>([]);
-  // const [signingUp, setSigningUp] = useState(false);
-
-  // const userName = `${firstName} ${lastName}`;
-
-  // const handleMechanicProfile = () => {
-  //   setUserType("mechanic");
-  // };
-
-  // const handleCustomerProfile = () => {
-  //   setUserType("customer");
-  // };
-
-  // const handleGenderChange = (gender: string) => {
-  //   setSelectedGender((prevGender) => {
-  //     if (prevGender.includes(gender)) {
-  //       return prevGender.filter((g) => g !== gender);
-  //     } else {
-  //       return [...prevGender, gender];
-  //     }
-  //   });
-  // };
-
-  // const handleSignUp = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-
-  //   let formData: FormDataProps = {
-  //     email,
-  //     phoneNumber,
-  //     userName,
-  //     password,
-  //     userType,
-  //     selectedGender,
-  //   };
-
-  //   setSigningUp(true);
-  //   console.log(formData);
-
-  //   const {data , error} = await supabase.auth.signUp({
-  //     email: formData.email,
-  //     password: formData.password
-  //   })
-
-  //   const profileId = data?.user?.id;
-  //   // const { profileId, error } = await signUpAction(formData);
-  //   // console.log(profileId);
-  //   setSigningUp(false);
-
-  //   if (error) {
-  //     // Handle the Error Gracefully.
-  //     console.error(error.message);
-  //   } else {
-  //     console.log(formData);
-
-  //     // Only push to the route if there is no error.
-  //     router.push(`/driver/${profileId}`);
-  //   }
-
+  
   const formData = new FormData()
-  async function createUser(formData:FormDataProps) {
-    
-  }
+  const [userType, setUserType] = useState("customer");
+  const [gender, setGender] = useState<string>("");
 
-  };
+
+  const handleMechanicProfile = () => setUserType("mechanic");
+  const handleCustomerProfile = () => setUserType("customer");
+  const handleMaleClick = () => setGender("male");
+  const handleFemaleClick = () => setGender("female");
+  
+  async function createUser() {
+    const firstName = formData.get("first-name");
+    const lastName = formData.get("last-name");
+    const fullName = `${firstName} ${lastName}`;
+    const email = formData.get("email") as string ?? "";
+    const phoneNumber = formData.get("phone-number") as string ?? "";
+    const password = formData.get("password") as string;
+
+    
+
+    const userForm: FormDataProps = {
+      userType: userType,
+      userName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      selectedGender: gender,
+      password: password
+    }
+  }
 
   return (
     <div className="w-full h-full">
@@ -90,10 +40,11 @@ const SignUp = () => {
         <h1 className="py-2 text-2xl font-bold container">Sign Up</h1>
         <form
           className="flex flex-col my-4 container md:w-[800px] space-y-5"
-          onSubmit={handleSignUp}
+          // onSubmit={handleSignUp}
         >
           <div className="flex  my-4 justify-between">
             <button
+              name="customer-profile"
               className="py-4 w-[250px]  rounded-xl border-solid border-4 border-orange-400 text-bold"
               onClick={handleCustomerProfile}
               type="button"
@@ -101,6 +52,7 @@ const SignUp = () => {
               I'm a Driver
             </button>
             <button
+              name="mechanic-profile"
               className="py-4 w-[250px] rounded-xl border-solid border-4 border-orange-400 text-bold"
               type="button"
               onClick={handleMechanicProfile}
@@ -118,16 +70,14 @@ const SignUp = () => {
             <h3 className="text-bold w-fit my-2">Whats your name?</h3>
             <div className="flex justify-evenly py-2">
               <input
+                name="first-name"
                 type="text"
-                onChange={(e) => setFirstName(e.target.value)}
-                value={firstName}
                 placeholder="First Name"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
               />
               <input
+                name="last-name"
                 type="text"
-                onChange={(e) => setLastName(e.target.value)}
-                value={lastName}
                 placeholder="Last Name"
                 className="py-4  border-2 border-orange-400 text-center rounded-xl"
               />
@@ -140,9 +90,8 @@ const SignUp = () => {
                 What's your email address?
               </h3>
               <input
+                name="email"
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
                 placeholder="Email Address"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
               />
@@ -156,10 +105,9 @@ const SignUp = () => {
                   What's your phone number
                 </h3>
                 <input
+                  name="phone-number"
                   type="number"
                   placeholder="Phone Number"
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  value={phoneNumber}
                   className="py-4 text-center rounded-xl border-2 border-orange-400"
                 />
               </div>
@@ -169,18 +117,20 @@ const SignUp = () => {
                 <div className=" flex gap-2 justify-between w-full">
                   <label className="flex gap-2">
                     <input
+                      name="male"
                       type="checkbox"
-                      checked={selectedGender.includes("male")}
-                      onChange={() => handleGenderChange("male")}
+                      value="male"
+                      onChange={handleMaleClick}
                     />
                     <span>Male</span>
                   </label>
                   {/* <div className=" space-x-2"> */}
                   <label className="flex gap-2">
                     <input
+                      name="female"
                       type="checkbox"
-                      checked={selectedGender.includes("female")}
-                      onChange={() => handleGenderChange("female")}
+                      value="female"
+                      onChange={handleFemaleClick}
                     />
                     <span>Female</span>
                   </label>
@@ -193,9 +143,8 @@ const SignUp = () => {
             <div className="my-4 flex flex-col space-y-2">
               <h3 className="text-bold w-fit my-2">Create a Password</h3>
               <input
+                name="password"
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
                 placeholder="Password"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
               />
@@ -219,22 +168,22 @@ const SignUp = () => {
                 .
               </span>
             </div>
-            {!signingUp && (
+            {/* {!signingUp && ( */}
               <button
                 className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
                 type="submit"
               >
                 Sign Up
               </button>
-            )}
-            {signingUp && (
+            {/* )} */}
+            {/* {signingUp && (
               <button
                 className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
                 disabled
               >
                 Signing Up ...
               </button>
-            )}
+            )} */}
           </div>
         </form>
       </div>
