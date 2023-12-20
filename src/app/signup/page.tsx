@@ -2,6 +2,7 @@
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
 import { signUpUser } from "./actions";
+import { toast } from "sonner";
 
 const SignUp = () => {
   
@@ -33,7 +34,14 @@ const SignUp = () => {
       password: password
     }
 
-    await signUpUser(userForm)
+   const response = await signUpUser(userForm);
+
+   
+   if (response.error){
+    toast.error(response.error)
+   }else {
+    toast.info("User created successfully!")
+   }
   }
 
   return (
