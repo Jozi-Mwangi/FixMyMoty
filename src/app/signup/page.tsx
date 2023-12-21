@@ -2,50 +2,47 @@
 import { FormDataProps } from "@/types/globalTypes";
 import React, { useState } from "react";
 import { signUpUser } from "./actions";
-import { toast } from "sonner";
+import {Toaster, toast } from "sonner";
 
 const SignUp = () => {
-  
-  const formData = new FormData()
+  const formData = new FormData();
   const [userType, setUserType] = useState("customer");
   const [gender, setGender] = useState<string>("");
-
 
   const handleMechanicProfile = () => setUserType("mechanic");
   const handleCustomerProfile = () => setUserType("customer");
   const handleMaleClick = () => setGender("male");
   const handleFemaleClick = () => setGender("female");
-  
 
   async function createUser() {
     const firstName = formData.get("first-name");
     const lastName = formData.get("last-name");
     const fullName = `${firstName} ${lastName}`;
-    const email = formData.get("email") as string ?? "";
-    const phoneNumber = formData.get("phone-number") as string ?? "";
+    const email = (formData.get("email") as string) ?? "";
+    const phoneNumber = (formData.get("phone-number") as string) ?? "";
     const password = formData.get("password") as string;
-  
+
     const userForm: FormDataProps = {
       userType: userType,
       userName: fullName,
       email: email,
       phoneNumber: phoneNumber,
       selectedGender: gender,
-      password: password
+      password: password,
+    };
+
+    const response = await signUpUser(userForm);
+
+    if (response?.error) {
+      toast.error(response?.error);
+    } else {
+      toast.success("User created successfully!");
     }
-
-   const response = await signUpUser(userForm);
-
-   
-   if (response.error){
-    toast.error(response.error)
-   }else {
-    toast.info("User created successfully!")
-   }
   }
 
   return (
     <div className="w-full h-full">
+      <Toaster/>
       <div className="py-6 text-center">
         <h1 className="py-2 text-2xl font-bold container">Sign Up</h1>
         <form
@@ -81,12 +78,14 @@ const SignUp = () => {
             <h3 className="text-bold w-fit my-2">Whats your name?</h3>
             <div className="flex justify-evenly py-2">
               <input
+                min={4}
                 name="first-name"
                 type="text"
                 placeholder="First Name"
                 className="py-4 text-center rounded-xl border-2 border-orange-400"
               />
               <input
+                min={4}
                 name="last-name"
                 type="text"
                 placeholder="Last Name"
@@ -116,6 +115,7 @@ const SignUp = () => {
                   What's your phone number
                 </h3>
                 <input
+              min={10}
                   name="phone-number"
                   type="number"
                   placeholder="Phone Number"
@@ -154,6 +154,8 @@ const SignUp = () => {
             <div className="my-4 flex flex-col space-y-2">
               <h3 className="text-bold w-fit my-2">Create a Password</h3>
               <input
+              // Change to 10
+              min={3}
                 name="password"
                 type="password"
                 placeholder="Password"
@@ -180,12 +182,12 @@ const SignUp = () => {
               </span>
             </div>
             {/* {!signingUp && ( */}
-              <button
-                className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
-                type="submit"
-              >
-                Sign Up
-              </button>
+            <button
+              className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
+              type="submit"
+            >
+              Sign Up
+            </button>
             {/* )} */}
             {/* {signingUp && (
               <button

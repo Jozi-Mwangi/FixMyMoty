@@ -8,25 +8,25 @@ export const signUpUser = async (formData: FormDataProps) => {
   const supabase = createServerSupabaseClient();
 
   // Check if the username first exists
-  const {data} = await supabase
+  const { data } = await supabase
     .from("profiles")
     .select()
-    .eq("full_name", formData.userName.trim())
-  
-  if (data && data?.length>0){
+    .eq("full_name", formData.userName.trim());
+
+  if (data && data?.length > 0) {
     console.log(data);
-    // return toast.error("Username already exists")
+    return console.error("Username already exists")
   }
 
   const REDIRECT_URL = process.env.NEXT_PUBLIC_EMAIL_REDIRECT_URL;
-  
-  const {error } = await supabase.auth.signInWithOtp({
+
+  const { error } = await supabase.auth.signUp({
     email: formData.email.trim(),
+    password: formData.password,
     options: {
       // emailRedirectTo: `${location.origin}/auth/callback`,
-      emailRedirectTo:`${REDIRECT_URL}/auth/callback `,
+      emailRedirectTo: `${REDIRECT_URL}/auth/callback `,
       data: {
-        password: formData.password,
         phone_number: formData.phoneNumber,
         gender: formData.selectedGender,
         user_type: formData.userType,
@@ -36,15 +36,15 @@ export const signUpUser = async (formData: FormDataProps) => {
     },
   });
 
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  console.log(user?.id);
 
-  return{
+  return {
     data,
-    error: error?.message
-  }
+    error: error?.message,
+  };
   // const profileId = user?.id;
   // redirect(`/driver/${profileId}`);
 };
