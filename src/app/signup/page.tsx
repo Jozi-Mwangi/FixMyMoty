@@ -8,6 +8,7 @@ const SignUp = () => {
   const formData = new FormData();
   const [userType, setUserType] = useState("customer");
   const [gender, setGender] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const handleMechanicProfile = () => setUserType("mechanic");
   const handleCustomerProfile = () => setUserType("customer");
@@ -30,7 +31,8 @@ const SignUp = () => {
       selectedGender: gender,
       password: password,
     };
-
+    
+    setLoading(true);
     const response = await signUpUser(userForm);
 
     if (response?.error) {
@@ -38,6 +40,7 @@ const SignUp = () => {
     } else {
       toast.success("User created successfully!");
     }
+    setLoading(false)
   }
 
   return (
@@ -185,6 +188,7 @@ const SignUp = () => {
             <button
               className="bg-green-500  md:w-[300px] md:mx-auto p-4 rounded-xl my-3"
               type="submit"
+              disabled={loading}
             >
               Sign Up
             </button>
