@@ -25,7 +25,7 @@ const SignUp = () => {
 
     const userForm: FormDataProps = {
       userType: userType,
-      userName: fullName,
+      userName: fullName.trim(),
       email: email,
       phoneNumber: phoneNumber,
       selectedGender: gender,
@@ -36,7 +36,8 @@ const SignUp = () => {
     const response = await signUpUser(userForm);
 
     if (response?.error) {
-      toast.error(response?.error);
+      console.error(response?.error)
+      toast.error(response?.error?.message);
     } else {
       toast.success("User created successfully!");
     }

@@ -43,7 +43,8 @@ export const signUpUser = async (formData: FormDataProps) => {
 
   return {
     data,
-    error: error?.message,
+    // error: error?.message,
+    error
   };
   // const profileId = user?.id;
   // redirect(`/driver/${profileId}`);
